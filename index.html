@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDPR Filter | RhmT Code⚙️AI</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+        
+        :root {
+            --primary: #2a7de1; /* Biru profesional */
+            --secondary: #e74c3c; /* Merah */
+            --accent: #f39c12; /* Kuning/oren */
+            --dark-bg: #0d1117; /* Background gelap */
+            --card-bg: #161b22; /* Card lebih terang */
+            --text: #e6edf3; /* Text putih keabuan */
+            --text-secondary: #8b949e; /* Text sekunder */
+            --border: #30363d; /* Border */
+            --success: #27ae60; /* Hijau sukses */
+            --warning: #f1c40f; /* Kuning peringatan */
+        }
+        
+        body {
+            background-color: var(--dark-bg);
+            color: var(--text);
+            min-height: 100vh;
+            position: relative;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        .background-effect {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 0.05;
+            background: 
+                linear-gradient(45deg, transparent 49%, var(--primary) 50%, transparent 51%),
+                linear-gradient(-45deg, transparent 49%, var(--primary) 50%, transparent 51%);
+            background-size: 60px 60px;
+        }
+        
+        .header {
+            text-align: center;
+            padding: 25px 15px;
+            background-color: rgba(13, 17, 23, 0.95);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--border);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .title {
+            font-size: 2rem;
+            margin-bottom: 8px;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            color: var(--text);
+        }
+        
+        .title span {
+            background: linear-gradient(90deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            max-width: 400px;
+            margin: 0 auto;
+            line-height: 1.5;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 25px 20px;
+        }
+        
+        .input-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--primary);
+        }
+        
+        .input-group {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .input-label {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .input-label i {
+            color: var(--primary);
+        }
+        
+        .input-field {
+            padding: 16px 20px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            color: var(--text);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(42, 125, 225, 0.2);
+        }
+        
+        .note-box {
+            background-color: rgba(241, 196, 15, 0.1);
+            border-radius: 10px;
+            padding: 15px 20px;
+            margin-top: 10px;
+            border-left: 4px solid var(--warning);
+        }
+        
+        .note-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+            color: var(--warning);
+            font-weight: 600;
+        }
+        
+        .note-content {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .btn {
+            background: linear-gradient(90deg, var(--primary), #1d6fd8);
+            color: white;
+            border: none;
+            padding: 17px 35px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            letter-spacing: 0.5px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(42, 125, 225, 0.4);
+        }
+        
+        .btn-secondary {
+            background-color: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: var(--primary);
+        }
+        
+        .result-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 30px;
+            margin-top: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border);
+            display: none;
+            border-left: 4px solid var(--success);
+        }
+        
+        .result-card.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .result-title {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 700;
+        }
+        
+        .result-title i {
+            color: var(--success);
+        }
+        
+        .result-image-container {
+            width: 100%;
+            max-height: 500px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 0 auto 25px;
+            background-color: rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid var(--border);
+        }
+        
+        .result-image {
+            max-width: 100%;
+            max-height: 500px;
+            object-fit: contain;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.1);
+            border-left-color: var(--primary);
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        
+        .info-box {
+            background-color: rgba(26, 155, 252, 0.1);
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 25px;
+            border-left: 4px solid var(--primary);
+        }
+        
+        .info-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-content {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        .whatsapp-channel {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 35px;
+            text-align: center;
+            border: 1px solid var(--border);
+            border-left: 4px solid var(--success);
+        }
+        
+        .whatsapp-title {
+            font-size: 1.3rem;
+            margin-bottom: 18px;
+            color: var(--success);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            font-weight: 700;
+        }
+        
+        .whatsapp-desc {
+            color: var(--text-secondary);
+            margin-bottom: 20px;
+            line-height: 1.6;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .whatsapp-btn {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            text-decoration: none;
+            letter-spacing: 0.5px;
+        }
+        
+        .whatsapp-btn:hover {
+            background-color: #2ecc71;
+            transform: translateY(-3px);
+            box-shadow: 0 7px 20px rgba(46, 204, 113, 0.3);
+        }
+        
+        .footer {
+            text-align: center;
+            padding: 25px 20px;
+            margin-top: 40px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            border-top: 1px solid var(--border);
+            background-color: rgba(13, 17, 23, 0.8);
+        }
+        
+        .footer a {
+            color: var(--primary);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        .footer a:hover {
+            color: var(--accent);
+            text-decoration: underline;
+        }
+        
+        .example-urls {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .example-url {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 15px;
+            background-color: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .example-url:hover {
+            background-color: rgba(42, 125, 225, 0.1);
+            border-color: var(--primary);
+        }
+        
+        .example-url i {
+            color: var(--primary);
+        }
+        
+        .url-text {
+            flex: 1;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            word-break: break-all;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px 15px;
+            }
+            
+            .input-card, .result-card, .whatsapp-channel {
+                padding: 25px 20px;
+            }
+            
+            .title {
+                font-size: 1.7rem;
+            }
+            
+            .subtitle {
+                font-size: 0.95rem;
+                max-width: 350px;
+            }
+            
+            .btn, .whatsapp-btn {
+                padding: 16px 25px;
+                font-size: 1rem;
+            }
+            
+            .input-field {
+                padding: 15px;
+                font-size: 1rem;
+            }
+            
+            .whatsapp-desc {
+                max-width: 400px;
+            }
+        }
+        
+        @keyframes fadeIn {
+            from { 
+                opacity: 0; 
+                transform: translateY(20px); 
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0); 
+            }
+        }
+        
+        @keyframes spin {
+            to { 
+                transform: rotate(360deg); 
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background efek -->
+    <div class="background-effect"></div>
+    
+    <!-- Header -->
+    <div class="header">
+        <h1 class="title">✧･ﾟ: <span>[𝙍]𝙝𝙢𝙏 | 𝘾𝙤𝙙𝙚⚙️𝘼𝙄 𝙡</span> :･ﾟ✧</h1>
+        <p class="subtitle">Filter ToDPR - Ubah foto jadi figur skala 1/7</p>
+    </div>
+    
+    <!-- Kontainer Utama -->
+    <div class="container">
+        <!-- Card Input -->
+        <div class="input-card">
+            <div class="input-group">
+                <label class="input-label" for="imageUrl">
+                    <i class="fas fa-link"></i> Masukkan URL Gambar
+                </label>
+                <input 
+                    type="url" 
+                    id="imageUrl" 
+                    class="input-field" 
+                    placeholder="https://contoh.com/gambar.jpg"
+                    autocomplete="off"
+                    autofocus
+                >
+                
+                <div class="note-box">
+                    <div class="note-title">
+                        <i class="fas fa-exclamation-triangle"></i> Catatan Penting
+                    </div>
+                    <div class="note-content">
+                        Untuk saat ini hanya mendukung gambar dari link/URL. Upload file langsung dari perangkat belum didukung oleh API.
+                    </div>
+                </div>
+                
+                <!-- Contoh URL -->
+                <div class="example-urls">
+                    <div class="example-url" data-url="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400">
+                        <i class="fas fa-user-tie"></i>
+                        <div class="url-text">Contoh: Foto Profil Formal</div>
+                        <i class="fas fa-copy"></i>
+                    </div>
+                    <div class="example-url" data-url="https://images.unsplash.com/photo-1544725176-7c40e5a71c5e?w=400">
+                        <i class="fas fa-user"></i>
+                        <div class="url-text">Contoh: Portrait Close-up</div>
+                        <i class="fas fa-copy"></i>
+                    </div>
+                </div>
+                
+                <button id="processBtn" class="btn">
+                    <i class="fas fa-magic"></i> Terapkan Filter DPR
+                </button>
+            </div>
+        </div>
+        
+        <!-- Info Box -->
+        <div class="info-box">
+            <div class="info-title">
+                <i class="fas fa-info-circle"></i> Apa itu Filter ToDPR?
+            </div>
+            <div class="info-content">
+                Filter ToDPR menggunakan teknologi AI untuk mengubah foto lu/org lain menjadi figur skala 1/7 dengan gaya seperti anggota DPR yang sedang duduk di depan publik (ktnya klo ada bantuan harus izin dulu🗿). Hasilnya akan memberikan kesan formal dan professional dengan pakaian jas yang rapi.
+            </div>
+        </div>
+        
+        <!-- Loading -->
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>Sedang memproses gambar dengan AI...</p>
+            <p style="color: var(--text-secondary); margin-top: 10px;">Proses mungkin memakan waktu beberapa detik</p>
+        </div>
+        
+        <!-- Hasil -->
+        <div class="result-card" id="resultCard">
+            <h3 class="result-title">
+                <i class="fas fa-check-circle"></i> Gambar Berhasil Diubah!
+            </h3>
+            <div style="text-align: center;">
+                <div class="result-image-container">
+                    <img id="resultImage" class="result-image" alt="Hasil Filter DPR">
+                </div>
+                <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+                    <a id="downloadBtn" class="btn" download="hasil-dpr.png">
+                        <i class="fas fa-download"></i> Download Gambar
+                    </a>
+                    <button id="newBtn" class="btn-secondary">
+                        <i class="fas fa-redo"></i> Coba Gambar Lain
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- WhatsApp Channel -->
+        <div class="whatsapp-channel">
+            <h3 class="whatsapp-title">
+                <i class="fab fa-whatsapp"></i>join ch gw  ya cuy😁👍
+            </h3>
+            <p class="whatsapp-desc">
+                info web menarik lainnya dan all tolls ada di deskripsi saluran gw ya cuy
+            </p>
+            <a href="https://whatsapp.com/channel/0029VbBjyjlJ93wa6hwSWa0p" target="_blank" class="whatsapp-btn">
+                <i class="fab fa-whatsapp"></i> Join saluran  Sekarang
+            </a>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="footer">
+        <p>© 2025 <a href="#" target="_blank">RhmT Code⚙️AI</a> | ToDPR Filter oleh <a href="https://api-faa.my.id" target="_blank">api-faa.my.id</a></p>
+        <p style="margin-top: 10px;">AI Technology untuk transformasi gambar</p>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const imageUrlInput = document.getElementById('imageUrl');
+            const processBtn = document.getElementById('processBtn');
+            const loading = document.getElementById('loading');
+            const resultCard = document.getElementById('resultCard');
+            const resultImage = document.getElementById('resultImage');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const newBtn = document.getElementById('newBtn');
+            const exampleUrls = document.querySelectorAll('.example-url');
+            
+            // Handle contoh URL
+            exampleUrls.forEach(example => {
+                example.addEventListener('click', function() {
+                    const url = this.getAttribute('data-url');
+                    imageUrlInput.value = url;
+                    
+                    // Feedback visual
+                    this.style.backgroundColor = 'rgba(42, 125, 225, 0.2)';
+                    this.style.borderColor = 'var(--primary)';
+                    
+                    setTimeout(() => {
+                        this.style.backgroundColor = '';
+                        this.style.borderColor = '';
+                    }, 500);
+                });
+            });
+            
+            // Fungsi untuk memproses filter DPR
+            async function applyDPRFilter(imageUrl) {
+                const apiUrl = `https://api-faa.my.id/faa/todpr?url=${encodeURIComponent(imageUrl)}`;
+                
+                try {
+                    const response = await fetch(apiUrl);
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}`);
+                    }
+                    
+                    // Cek tipe respons
+                    const contentType = response.headers.get('content-type');
+                    
+                    if (contentType && contentType.includes('application/json')) {
+                        const data = await response.json();
+                        return data.imageUrl || data.url || data.result;
+                    } else {
+                        // Jika respons langsung berupa gambar
+                        const blob = await response.blob();
+                        return URL.createObjectURL(blob);
+                    }
+                } catch (error) {
+                    console.error('Error processing image:', error);
+                    return { 
+                        error: true, 
+                        message: 'Terjadi kesalahan saat memproses gambar. Pastikan URL gambar valid dan dapat diakses.' 
+                    };
+                }
+            }
+            
+            // Event listener untuk tombol proses
+            processBtn.addEventListener('click', async function() {
+                const imageUrl = imageUrlInput.value.trim();
+                
+                if (!imageUrl) {
+                    // Efek shake pada input
+                    imageUrlInput.style.borderColor = '#e74c3c';
+                    imageUrlInput.style.animation = 'shake 0.5s';
+                    
+                    setTimeout(() => {
+                        imageUrlInput.style.borderColor = '';
+                        imageUrlInput.style.animation = '';
+                    }, 500);
+                    
+                    imageUrlInput.focus();
+                    return;
+                }
+                
+                // Validasi URL
+                if (!imageUrl.startsWith('http://') && !imageUrl.startsWith('https://')) {
+                    alert('URL harus dimulai dengan http:// atau https://');
+                    return;
+                }
+                
+                // Tampilkan loading, sembunyikan hasil sebelumnya
+                loading.classList.add('active');
+                resultCard.classList.remove('active');
+                
+                // Tambah animasi loading pada tombol
+                processBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Memproses...';
+                processBtn.disabled = true;
+                
+                // Proses gambar dengan AI
+                const result = await applyDPRFilter(imageUrl);
+                
+                // Reset tombol
+                processBtn.innerHTML = '<i class="fas fa-magic"></i> Terapkan Filter DPR';
+                processBtn.disabled = false;
+                
+                // Sembunyikan loading
+                loading.classList.remove('active');
+                
+                // Tampilkan hasil
+                if (typeof result === 'object' && result.error) {
+                    alert(`Error: ${result.message}`);
+                } else if (result) {
+                    resultImage.src = result;
+                    downloadBtn.href = result;
+                    downloadBtn.download = `dpr-filter-${Date.now()}.png`;
+                    resultCard.classList.add('active');
+                    
+                    // Scroll ke hasil
+                    resultCard.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else {
+                    alert('Gagal memproses gambar. Coba URL gambar lain.');
+                }
+            });
+            
+            // Event listener untuk tombol gambar baru
+            newBtn.addEventListener('click', function() {
+                // Reset input
+                imageUrlInput.value = '';
+                imageUrlInput.focus();
+                
+                // Sembunyikan hasil
+                resultCard.classList.remove('active');
+            });
+            
+            // Event listener untuk tekan Enter di input
+            imageUrlInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    processBtn.click();
+                }
+            });
+            
+            // Tambah style untuk animasi shake
+            const shakeStyle = document.createElement('style');
+            shakeStyle.textContent = `
+                @keyframes shake {
+                    0%, 100% { transform: translateX(0); }
+                    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+                    20%, 40%, 60%, 80% { transform: translateX(5px); }
+                }
+            `;
+            document.head.appendChild(shakeStyle);
+            
+            // Fokus ke input saat halaman dimuat
+            imageUrlInput.focus();
+        });
+    </script>
+</body>
+</html>
